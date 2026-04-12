@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f0a1e">
+<title>Voice Bot</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f0a1e;color:#fff;font-family:sans-serif;
+     display:flex;flex-direction:column;align-items:center;
+     padding:28px 18px;gap:0;min-height:100vh}
+h1{font-size:20px;color:#c4b5fd;margin-bottom:3px}
+.sub{font-size:12px;color:#555;margin-bottom:20px}
+#sbar{font-size:12px;color:#555;margin-bottom:20px;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.dot.off{background:#ef4444}
+.lk-row{display:flex;gap:10px;width:100%;max-width:340px;margin-bottom:18px}
+.lkbtn{flex:1;padding:15px 0;border-radius:11px;font-size:14px;font-weight:500;border:none;cursor:pointer}
+.lkbtn.lock{background:#1e3a5f;color:#93c5fd}
+.lkbtn.unlock{background:#14532d;color:#86efac}
+#mic{width:100px;height:100px;border-radius:50%;background:#6d28d9;
+     border:none;color:#fff;font-size:38px;cursor:pointer;outline:none;
+     transition:transform .15s,background .2s}
+#mic:active{transform:scale(.9)}
+#mic.on{background:#dc2626;animation:pu 1s infinite}
+@keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}
+              60%{box-shadow:0 0 0 18px rgba(220,38,38,0)}}
+#tx{margin-top:18px;font-size:13px;color:#a78bfa;text-align:center;max-width:320px;min-height:18px}
+#res{margin-top:10px;font-size:13px;color:#4ade80;text-align:center;max-width:320px;min-height:18px;line-height:1.5}
+.qrow{margin-top:22px;width:100%;max-width:340px}
+.qlabel{font-size:10px;color:#444;margin-bottom:7px;letter-spacing:.5px}
+.qgrid{display:flex;flex-wrap:wrap;gap:6px}
+.qc{font-size:11px;padding:5px 11px;border-radius:13px;background:#1a1035;color:#888;cursor:pointer;border:0.5px solid #2a1f4a}
+.qc:active{background:#2a1f4a}
+.hrow{margin-top:22px;width:100%;max-width:340px}
+.hlabel{font-size:10px;color:#444;margin-bottom:7px}
+.hitem{font-size:12px;padding:8px 10px;border-radius:8px;background:#1a1035;margin-bottom:5px;color:#888;line-height:1.5}
+.hitem span{color:#c4b5fd}
+</style>
+</head>
+<body>
+<h1>Voice Bot</h1>
+<p class="sub">Control your laptop from anywhere</p>
+
+<div id="sbar">
+  <div class="dot off" id="dot"></div>
+  <span id="stxt">Checking laptop...</span>
+</div>
+
+<div class="lk-row">
+  <button class="lkbtn lock"   onclick="send('lock the screen')">🔒 Lock</button>
+  <button class="lkbtn unlock" onclick="send('unlock')">🔓 Unlock</button>
+</div>
+
+<button id="mic" onclick="listen()">🎤</button>
+<div id="tx">Tap mic and speak a command</div>
+<div id="res"></div>
+
+<div class="qrow">
+  <div class="qlabel">QUICK COMMANDS</div>
+  <div class="qgrid">
+    <div class="qc" onclick="send('lock the screen')">lock</div>
+    <div class="qc" onclick="send('unlock')">unlock</div>
+    <div class="qc" onclick="send('take a screenshot')">screenshot</div>
+    <div class="qc" onclick="send('open chrome')">open chrome</div>
+    <div class="qc" onclick="send('mute')">mute</div>
+    <div class="qc" onclick="send('scroll down')">scroll down</div>
+    <div class="qc" onclick="send('scroll up')">scroll up</div>
+    <div class="qc" onclick="send('press ctrl v')">ctrl+v</div>
+    <div class="qc" onclick="send('press ctrl c')">ctrl+c</div>
+    <div class="qc" onclick="send('open notepad')">notepad</div>
+    <div class="qc" onclick="send('open calculator')">calculator</div>
+    <div class="qc" onclick="send('cancel shutdown')">cancel shutdown</div>
+  </div>
+</div>
+
+<div class="hrow">
+  <div class="hlabel">RECENT COMMANDS</div>
+  <div id="hlog"></div>
+</div>
+
+<script>
+const SERVER = "https://chicken-aurora-pirates-evident.trycloudflare.com";
+const TOKEN  = "Moksha@2231";
+
+async function checkOnline(){
+  try{
+    const r = await fetch(SERVER+"/ping",{signal:AbortSignal.timeout(6000)});
+    const d = await r.json();
+    document.getElementById("dot").className = "dot";
+    document.getElementById("stxt").textContent = "Laptop online · "+d.contacts+" contacts";
+  }catch{
+    document.getElementById("dot").className = "dot off";
+    document.getElementById("stxt").textContent = "Laptop offline";
+  }
+}
+checkOnline();
+setInterval(checkOnline, 30000);
+
+async function send(text){
+  document.getElementById("tx").textContent  = '"'+text+'"';
+  document.getElementById("res").textContent = "⏳ Sending...";
+  try{
+    const r = await fetch(SERVER+"/command",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({text, token: TOKEN})
+    });
+    const d = await r.json();
+    const msg = d.result || d.error || "Done";
+    document.getElementById("res").textContent = "✅ "+msg;
+    addLog(text, msg);
+  }catch{
+    document.getElementById("res").textContent = "❌ Cannot reach laptop. Check server.";
+  }
+}
+
+function addLog(cmd, res){
+  const d = document.getElementById("hlog");
+  const el = document.createElement("div");
+  el.className = "hitem";
+  el.innerHTML = "<span>\""+cmd+"\"</span><br>"+res;
+  d.prepend(el);
+  if(d.children.length > 6) d.lastChild.remove();
+}
+
+function listen(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ alert("Use Chrome on Android for voice input."); return; }
+  const r = new SR();
+  r.lang = "en-IN";
+  r.interimResults = false;
+  const btn = document.getElementById("mic");
+  btn.classList.add("on");
+  btn.textContent = "🔴";
+  document.getElementById("tx").textContent = "Listening...";
+  r.onresult = e => { send(e.results[0][0].transcript); };
+  r.onend    = () => { btn.classList.remove("on"); btn.textContent="🎤"; };
+  r.onerror  = e => {
+    btn.classList.remove("on"); btn.textContent="🎤";
+    document.getElementById("res").textContent = "Mic error: "+e.error;
+  };
+  r.start();
+}
+</script>
+</body>
+</html>
