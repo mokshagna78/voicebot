@@ -72,6 +72,7 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:3px}
     <div class="qc" onclick="send('open notepad')">notepad</div>
     <div class="qc" onclick="send('open calculator')">calculator</div>
     <div class="qc" onclick="send('cancel shutdown')">cancel shutdown</div>
+    <div class="qc" onclick="reload()">sync contacts</div>
   </div>
 </div>
 
@@ -81,7 +82,7 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:3px}
 </div>
 
 <script>
-const SERVER = "https://francisco-reasonably-displaying-fame.trycloudflare.com";
+const SERVER = "https://ala-efficient-blowing-centuries.trycloudflare.com";
 const TOKEN  = "Moksha@2231";
 
 async function checkOnline(){
@@ -113,6 +114,21 @@ async function send(text){
     addLog(text, msg);
   }catch{
     document.getElementById("res").textContent = "❌ Cannot reach laptop. Check server.";
+  }
+}
+
+async function reload(){
+  document.getElementById("res").textContent = "⏳ Syncing contacts...";
+  try{
+    const r = await fetch(SERVER+"/reload",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({token: TOKEN})
+    });
+    const d = await r.json();
+    document.getElementById("res").textContent = "✅ "+d.result;
+  }catch{
+    document.getElementById("res").textContent = "❌ Sync failed";
   }
 }
 
