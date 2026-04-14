@@ -9,155 +9,256 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0f0a1e;color:#fff;font-family:sans-serif;
      display:flex;flex-direction:column;align-items:center;
-     padding:28px 18px;gap:0;min-height:100vh}
-h1{font-size:20px;color:#c4b5fd;margin-bottom:3px}
-.sub{font-size:12px;color:#555;margin-bottom:20px}
-#sbar{font-size:12px;color:#555;margin-bottom:20px;display:flex;align-items:center;gap:6px}
+     padding:24px 16px;min-height:100vh}
+h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
+.sub{font-size:12px;color:#555;margin-bottom:16px}
+#sbar{font-size:12px;color:#555;margin-bottom:16px;display:flex;align-items:center;gap:6px}
 .dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0}
 .dot.off{background:#ef4444}
-.lk-row{display:flex;gap:10px;width:100%;max-width:340px;margin-bottom:18px}
-.lkbtn{flex:1;padding:15px 0;border-radius:11px;font-size:14px;font-weight:500;border:none;cursor:pointer}
+.row2{display:flex;gap:8px;width:100%;max-width:340px;margin-bottom:10px}
+.lkbtn{flex:1;padding:14px 0;border-radius:11px;font-size:13px;font-weight:500;border:none;cursor:pointer}
 .lkbtn.lock{background:#1e3a5f;color:#93c5fd}
 .lkbtn.unlock{background:#14532d;color:#86efac}
-#mic{width:100px;height:100px;border-radius:50%;background:#6d28d9;
-     border:none;color:#fff;font-size:38px;cursor:pointer;outline:none;
-     transition:transform .15s,background .2s}
+.lkbtn.files{background:#2d1f4a;color:#c4b5fd}
+#mic{width:90px;height:90px;border-radius:50%;background:#6d28d9;
+     border:none;color:#fff;font-size:34px;cursor:pointer;outline:none;
+     transition:transform .15s,background .2s;margin-bottom:4px}
 #mic:active{transform:scale(.9)}
 #mic.on{background:#dc2626;animation:pu 1s infinite}
 @keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}
-              60%{box-shadow:0 0 0 18px rgba(220,38,38,0)}}
-#tx{margin-top:18px;font-size:13px;color:#a78bfa;text-align:center;max-width:320px;min-height:18px}
-#res{margin-top:10px;font-size:13px;color:#4ade80;text-align:center;max-width:320px;min-height:18px;line-height:1.5}
-.qrow{margin-top:22px;width:100%;max-width:340px}
-.qlabel{font-size:10px;color:#444;margin-bottom:7px;letter-spacing:.5px}
-.qgrid{display:flex;flex-wrap:wrap;gap:6px}
-.qc{font-size:11px;padding:5px 11px;border-radius:13px;background:#1a1035;color:#888;cursor:pointer;border:0.5px solid #2a1f4a}
+              60%{box-shadow:0 0 0 16px rgba(220,38,38,0)}}
+#tx{font-size:13px;color:#a78bfa;text-align:center;max-width:320px;min-height:18px;margin-bottom:6px}
+#res{font-size:13px;color:#4ade80;text-align:center;max-width:320px;min-height:18px;line-height:1.5;margin-bottom:16px}
+.sec{width:100%;max-width:340px;margin-bottom:16px}
+.slabel{font-size:10px;color:#444;margin-bottom:6px;letter-spacing:.5px}
+.qgrid{display:flex;flex-wrap:wrap;gap:5px}
+.qc{font-size:11px;padding:5px 10px;border-radius:12px;background:#1a1035;
+    color:#888;cursor:pointer;border:0.5px solid #2a1f4a}
 .qc:active{background:#2a1f4a}
-.hrow{margin-top:22px;width:100%;max-width:340px}
-.hlabel{font-size:10px;color:#444;margin-bottom:7px}
-.hitem{font-size:12px;padding:8px 10px;border-radius:8px;background:#1a1035;margin-bottom:5px;color:#888;line-height:1.5}
+.hitem{font-size:12px;padding:8px 10px;border-radius:8px;background:#1a1035;
+       margin-bottom:5px;color:#888;line-height:1.5}
 .hitem span{color:#c4b5fd}
+#fb{width:100%;max-width:340px;display:none;margin-bottom:16px}
+.fpath{font-size:10px;color:#555;margin-bottom:6px;word-break:break-all;
+       padding:6px 8px;background:#0a0718;border-radius:6px}
+.fi{padding:9px 11px;background:#1a1035;border-radius:8px;margin-bottom:5px;
+    cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.fi:active{background:#2a1f4a}
+.fn{font-size:12px;color:#ccc;word-break:break-all;flex:1}
+.fs{font-size:10px;color:#555;flex-shrink:0;margin-left:8px}
 </style>
 </head>
 <body>
 <h1>Voice Bot</h1>
 <p class="sub">Control your laptop from anywhere</p>
+<div id="sbar"><div class="dot off" id="dot"></div><span id="stxt">Checking...</span></div>
 
-<div id="sbar">
-  <div class="dot off" id="dot"></div>
-  <span id="stxt">Checking laptop...</span>
-</div>
-
-<div class="lk-row">
+<div class="row2">
   <button class="lkbtn lock"   onclick="send('lock the screen')">🔒 Lock</button>
   <button class="lkbtn unlock" onclick="send('unlock')">🔓 Unlock</button>
 </div>
+<div class="row2">
+  <button class="lkbtn files" style="flex:1" onclick="toggleFiles()">📁 Browse Files</button>
+</div>
 
 <button id="mic" onclick="listen()">🎤</button>
-<div id="tx">Tap mic and speak a command</div>
+<div id="tx">Tap mic and speak</div>
 <div id="res"></div>
 
-<div class="qrow">
-  <div class="qlabel">QUICK COMMANDS</div>
+<div class="sec">
+  <div class="slabel">QUICK COMMANDS</div>
   <div class="qgrid">
     <div class="qc" onclick="send('lock the screen')">lock</div>
     <div class="qc" onclick="send('unlock')">unlock</div>
     <div class="qc" onclick="send('take a screenshot')">screenshot</div>
-    <div class="qc" onclick="send('open chrome')">open chrome</div>
+    <div class="qc" onclick="send('open chrome')">chrome</div>
+    <div class="qc" onclick="send('open whatsapp')">whatsapp</div>
+    <div class="qc" onclick="send('open calculator')">calculator</div>
+    <div class="qc" onclick="send('open notepad')">notepad</div>
+    <div class="qc" onclick="send('open file explorer')">explorer</div>
     <div class="qc" onclick="send('mute')">mute</div>
     <div class="qc" onclick="send('scroll down')">scroll down</div>
     <div class="qc" onclick="send('scroll up')">scroll up</div>
-    <div class="qc" onclick="send('press ctrl v')">ctrl+v</div>
     <div class="qc" onclick="send('press ctrl c')">ctrl+c</div>
-    <div class="qc" onclick="send('open notepad')">notepad</div>
-    <div class="qc" onclick="send('open calculator')">calculator</div>
+    <div class="qc" onclick="send('press ctrl v')">ctrl+v</div>
+    <div class="qc" onclick="send('press ctrl z')">ctrl+z</div>
+    <div class="qc" onclick="send('press alt tab')">alt+tab</div>
+    <div class="qc" onclick="send('press win d')">show desktop</div>
+    <div class="qc" onclick="send('close window')">close window</div>
+    <div class="qc" onclick="send('select all')">select all</div>
+    <div class="qc" onclick="send('shutdown')">shutdown</div>
     <div class="qc" onclick="send('cancel shutdown')">cancel shutdown</div>
-    <div class="qc" onclick="reload()">sync contacts</div>
+    <div class="qc" onclick="send('restart')">restart</div>
+    <div class="qc" onclick="send('sleep')">sleep</div>
+    <div class="qc" onclick="reloadContacts()">sync contacts</div>
   </div>
 </div>
 
-<div class="hrow">
-  <div class="hlabel">RECENT COMMANDS</div>
+<div id="fb">
+  <div class="slabel">FILE BROWSER</div>
+  <div id="fpath" class="fpath">C:\Users\moksh</div>
+  <div id="flist"></div>
+</div>
+
+<div class="sec">
+  <div class="slabel">RECENT COMMANDS</div>
   <div id="hlog"></div>
 </div>
 
 <script>
-const SERVER = "https://bargain-creates-choosing-wagon.trycloudflare.com";
+const SERVER = "https://ala-efficient-blowing-centuries.trycloudflare.com";
 const TOKEN  = "Moksha@2231";
 
 async function checkOnline(){
   try{
-    const r = await fetch(SERVER+"/ping",{signal:AbortSignal.timeout(6000)});
-    const d = await r.json();
-    document.getElementById("dot").className = "dot";
-    document.getElementById("stxt").textContent = "Laptop online · "+d.contacts+" contacts";
+    const r=await fetch(SERVER+"/ping",{signal:AbortSignal.timeout(6000)});
+    const d=await r.json();
+    document.getElementById("dot").className="dot";
+    document.getElementById("stxt").textContent="Laptop online · "+d.contacts+" contacts";
   }catch{
-    document.getElementById("dot").className = "dot off";
-    document.getElementById("stxt").textContent = "Laptop offline";
+    document.getElementById("dot").className="dot off";
+    document.getElementById("stxt").textContent="Laptop offline";
   }
 }
 checkOnline();
-setInterval(checkOnline, 30000);
+setInterval(checkOnline,30000);
 
 async function send(text){
-  document.getElementById("tx").textContent  = '"'+text+'"';
-  document.getElementById("res").textContent = "⏳ Sending...";
+  document.getElementById("tx").textContent='"'+text+'"';
+  document.getElementById("res").textContent="⏳ Sending...";
   try{
-    const r = await fetch(SERVER+"/command",{
+    const r=await fetch(SERVER+"/command",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({text, token: TOKEN})
+      body:JSON.stringify({text,token:TOKEN})
     });
-    const d = await r.json();
-    const msg = d.result || d.error || "Done";
-    document.getElementById("res").textContent = "✅ "+msg;
-    addLog(text, msg);
+    const d=await r.json();
+    const msg=d.result||d.error||"Done";
+    document.getElementById("res").textContent="✅ "+msg;
+    addLog(text,msg);
   }catch{
-    document.getElementById("res").textContent = "❌ Cannot reach laptop. Check server.";
+    document.getElementById("res").textContent="❌ Cannot reach laptop";
   }
 }
 
-async function reload(){
-  document.getElementById("res").textContent = "⏳ Syncing contacts...";
+async function reloadContacts(){
+  document.getElementById("res").textContent="⏳ Syncing contacts...";
   try{
-    const r = await fetch(SERVER+"/reload",{
+    const r=await fetch(SERVER+"/reload",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({token: TOKEN})
+      body:JSON.stringify({token:TOKEN})
     });
-    const d = await r.json();
-    document.getElementById("res").textContent = "✅ "+d.result;
+    const d=await r.json();
+    document.getElementById("res").textContent="✅ "+d.result;
   }catch{
-    document.getElementById("res").textContent = "❌ Sync failed";
+    document.getElementById("res").textContent="❌ Sync failed";
   }
 }
 
-function addLog(cmd, res){
-  const d = document.getElementById("hlog");
-  const el = document.createElement("div");
-  el.className = "hitem";
-  el.innerHTML = "<span>\""+cmd+"\"</span><br>"+res;
+function addLog(cmd,res){
+  const d=document.getElementById("hlog");
+  const el=document.createElement("div");
+  el.className="hitem";
+  el.innerHTML="<span>\""+cmd+"\"</span><br>"+res;
   d.prepend(el);
-  if(d.children.length > 6) d.lastChild.remove();
+  if(d.children.length>8)d.lastChild.remove();
 }
 
 function listen(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){ alert("Use Chrome on Android for voice input."); return; }
-  const r = new SR();
-  r.lang = "en-IN";
-  r.interimResults = false;
-  const btn = document.getElementById("mic");
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert("Use Chrome on Android");return;}
+  const r=new SR();
+  r.lang="en-IN";
+  r.interimResults=false;
+  const btn=document.getElementById("mic");
   btn.classList.add("on");
-  btn.textContent = "🔴";
-  document.getElementById("tx").textContent = "Listening...";
-  r.onresult = e => { send(e.results[0][0].transcript); };
-  r.onend    = () => { btn.classList.remove("on"); btn.textContent="🎤"; };
-  r.onerror  = e => {
-    btn.classList.remove("on"); btn.textContent="🎤";
-    document.getElementById("res").textContent = "Mic error: "+e.error;
+  btn.textContent="🔴";
+  document.getElementById("tx").textContent="Listening...";
+  r.onresult=e=>{send(e.results[0][0].transcript);};
+  r.onend=()=>{btn.classList.remove("on");btn.textContent="🎤";};
+  r.onerror=e=>{
+    btn.classList.remove("on");btn.textContent="🎤";
+    document.getElementById("res").textContent="Mic error: "+e.error;
   };
   r.start();
+}
+
+let filesOpen=false;
+function toggleFiles(){
+  filesOpen=!filesOpen;
+  document.getElementById("fb").style.display=filesOpen?"block":"none";
+  if(filesOpen)loadFiles("C:\\Users\\moksh");
+}
+
+async function loadFiles(path){
+  document.getElementById("fpath").textContent=path;
+  document.getElementById("flist").innerHTML="<div style='color:#555;font-size:12px;padding:8px'>Loading...</div>";
+  try{
+    const r=await fetch(SERVER+"/files?token="+TOKEN+"&path="+encodeURIComponent(path));
+    const d=await r.json();
+    if(d.error){
+      document.getElementById("flist").innerHTML="<div style='color:#ef4444;font-size:12px;padding:8px'>"+d.error+"</div>";
+      return;
+    }
+    let html="";
+    const par=path.includes("\\")?path.substring(0,path.lastIndexOf("\\"))||"C:\\":  "C:\\";
+    if(path!=="C:\\Users\\moksh"&&path!=="C:\\"){
+      html+=`<div class="fi" onclick="loadFiles('${par.replace(/\\/g,"\\\\")}')">`+
+            `<span class="fn">⬆ Back</span></div>`;
+    }
+    d.items.forEach(item=>{
+      const icon=item.type==="folder"?"📁":getIcon(item.name);
+      const size=item.type==="file"?fmtSize(item.size):"";
+      const ep=item.path.replace(/\\/g,"\\\\");
+      const action=item.type==="folder"
+        ?`loadFiles('${ep}')`
+        :`fileAction('${ep}','${item.name}')`;
+      html+=`<div class="fi" onclick="${action}">
+        <span class="fn">${icon} ${item.name}</span>
+        <span class="fs">${size}</span>
+      </div>`;
+    });
+    if(d.items.length===0)html="<div style='color:#555;font-size:12px;padding:8px'>Empty folder</div>";
+    document.getElementById("flist").innerHTML=html;
+  }catch{
+    document.getElementById("flist").innerHTML="<div style='color:#ef4444;font-size:12px;padding:8px'>Failed to load</div>";
+  }
+}
+
+function fileAction(path,name){
+  const ext=name.split(".").pop().toLowerCase();
+  const viewable=["jpg","jpeg","png","gif","bmp","webp","pdf","txt","mp4","mp3","wav","ogg"];
+  if(viewable.includes(ext)){
+    window.open(SERVER+"/download?token="+TOKEN+"&path="+encodeURIComponent(path));
+  }else{
+    if(confirm("Open '"+name+"' on laptop?")){
+      fetch(SERVER+"/open_file",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({path,token:TOKEN})
+      }).then(r=>r.json()).then(d=>{
+        document.getElementById("res").textContent="✅ "+(d.result||d.error);
+      });
+    }
+  }
+}
+
+function getIcon(name){
+  const ext=name.split(".").pop().toLowerCase();
+  const m={pdf:"📄",jpg:"🖼",jpeg:"🖼",png:"🖼",gif:"🖼",bmp:"🖼",webp:"🖼",
+    mp4:"🎬",mkv:"🎬",avi:"🎬",mov:"🎬",mp3:"🎵",wav:"🎵",
+    doc:"📝",docx:"📝",xls:"📊",xlsx:"📊",ppt:"📊",pptx:"📊",
+    zip:"🗜",rar:"🗜","7z":"🗜",exe:"⚙",msi:"⚙",
+    txt:"📃",csv:"📃",json:"📃",py:"📃",js:"📃",html:"📃"};
+  return m[ext]||"📄";
+}
+
+function fmtSize(b){
+  if(b<1024)return b+"B";
+  if(b<1048576)return Math.round(b/1024)+"KB";
+  if(b<1073741824)return (b/1048576).toFixed(1)+"MB";
+  return (b/1073741824).toFixed(1)+"GB";
 }
 </script>
 </body>
