@@ -11,41 +11,44 @@ body{background:#0f0a1e;color:#fff;font-family:sans-serif;
      display:flex;flex-direction:column;align-items:center;
      padding:24px 16px;min-height:100vh}
 h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
-.sub{font-size:12px;color:#555;margin-bottom:16px}
-#sbar{font-size:12px;color:#555;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.sub{font-size:12px;color:#555;margin-bottom:14px}
+#sbar{font-size:12px;color:#555;margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0}
 .dot.off{background:#ef4444}
-.row2{display:flex;gap:8px;width:100%;max-width:340px;margin-bottom:10px}
-.lkbtn{flex:1;padding:14px 0;border-radius:11px;font-size:13px;font-weight:500;border:none;cursor:pointer}
+.row2{display:flex;gap:8px;width:100%;max-width:340px;margin-bottom:8px}
+.lkbtn{flex:1;padding:13px 0;border-radius:10px;font-size:13px;font-weight:500;border:none;cursor:pointer}
 .lkbtn.lock{background:#1e3a5f;color:#93c5fd}
 .lkbtn.unlock{background:#14532d;color:#86efac}
 .lkbtn.files{background:#2d1f4a;color:#c4b5fd}
-#mic{width:90px;height:90px;border-radius:50%;background:#6d28d9;
-     border:none;color:#fff;font-size:34px;cursor:pointer;outline:none;
-     transition:transform .15s,background .2s;margin-bottom:4px}
+.lkbtn.screen{background:#1f2d1f;color:#86efac}
+#mic{width:86px;height:86px;border-radius:50%;background:#6d28d9;
+     border:none;color:#fff;font-size:32px;cursor:pointer;outline:none;
+     transition:transform .15s,background .2s;margin:10px 0 4px}
 #mic:active{transform:scale(.9)}
 #mic.on{background:#dc2626;animation:pu 1s infinite}
 @keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}
               60%{box-shadow:0 0 0 16px rgba(220,38,38,0)}}
-#tx{font-size:13px;color:#a78bfa;text-align:center;max-width:320px;min-height:18px;margin-bottom:6px}
-#res{font-size:13px;color:#4ade80;text-align:center;max-width:320px;min-height:18px;line-height:1.5;margin-bottom:16px}
-.sec{width:100%;max-width:340px;margin-bottom:16px}
+#tx{font-size:13px;color:#a78bfa;text-align:center;max-width:320px;min-height:18px;margin-bottom:5px}
+#res{font-size:13px;color:#4ade80;text-align:center;max-width:320px;min-height:18px;line-height:1.5;margin-bottom:14px}
+.sec{width:100%;max-width:340px;margin-bottom:14px}
 .slabel{font-size:10px;color:#444;margin-bottom:6px;letter-spacing:.5px}
 .qgrid{display:flex;flex-wrap:wrap;gap:5px}
 .qc{font-size:11px;padding:5px 10px;border-radius:12px;background:#1a1035;
     color:#888;cursor:pointer;border:0.5px solid #2a1f4a}
 .qc:active{background:#2a1f4a}
-.hitem{font-size:12px;padding:8px 10px;border-radius:8px;background:#1a1035;
-       margin-bottom:5px;color:#888;line-height:1.5}
+.hitem{font-size:12px;padding:8px 10px;border-radius:8px;
+       background:#1a1035;margin-bottom:5px;color:#888;line-height:1.5}
 .hitem span{color:#c4b5fd}
-#fb{width:100%;max-width:340px;display:none;margin-bottom:16px}
+#fb{width:100%;max-width:340px;display:none;margin-bottom:14px}
 .fpath{font-size:10px;color:#555;margin-bottom:6px;word-break:break-all;
        padding:6px 8px;background:#0a0718;border-radius:6px}
-.fi{padding:9px 11px;background:#1a1035;border-radius:8px;margin-bottom:5px;
+.fi{padding:9px 11px;background:#1a1035;border-radius:8px;margin-bottom:4px;
     cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .fi:active{background:#2a1f4a}
 .fn{font-size:12px;color:#ccc;word-break:break-all;flex:1}
 .fs{font-size:10px;color:#555;flex-shrink:0;margin-left:8px}
+#screenbox{width:100%;max-width:340px;display:none;margin-bottom:14px}
+#screenimg{width:100%;border-radius:10px;border:0.5px solid #2a1f4a}
 </style>
 </head>
 <body>
@@ -58,7 +61,8 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
   <button class="lkbtn unlock" onclick="send('unlock')">🔓 Unlock</button>
 </div>
 <div class="row2">
-  <button class="lkbtn files" style="flex:1" onclick="toggleFiles()">📁 Browse Files</button>
+  <button class="lkbtn files"  onclick="toggleFiles()">📁 Files</button>
+  <button class="lkbtn screen" onclick="toggleScreen()">🖥 Screen</button>
 </div>
 
 <button id="mic" onclick="listen()">🎤</button>
@@ -69,19 +73,21 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
   <div class="slabel">QUICK COMMANDS</div>
   <div class="qgrid">
     <div class="qc" onclick="send('lock the screen')">lock</div>
-    <div class="qc" onclick="send('unlock')">unlock</div>
+    <div class="qc" onclick="send('unlock laptop')">unlock</div>
     <div class="qc" onclick="send('take a screenshot')">screenshot</div>
     <div class="qc" onclick="send('open chrome')">chrome</div>
     <div class="qc" onclick="send('open whatsapp')">whatsapp</div>
     <div class="qc" onclick="send('open calculator')">calculator</div>
     <div class="qc" onclick="send('open notepad')">notepad</div>
     <div class="qc" onclick="send('open file explorer')">explorer</div>
+    <div class="qc" onclick="send('open spotify')">spotify</div>
     <div class="qc" onclick="send('mute')">mute</div>
     <div class="qc" onclick="send('scroll down')">scroll down</div>
     <div class="qc" onclick="send('scroll up')">scroll up</div>
     <div class="qc" onclick="send('press ctrl c')">ctrl+c</div>
     <div class="qc" onclick="send('press ctrl v')">ctrl+v</div>
     <div class="qc" onclick="send('press ctrl z')">ctrl+z</div>
+    <div class="qc" onclick="send('press ctrl s')">ctrl+s</div>
     <div class="qc" onclick="send('press alt tab')">alt+tab</div>
     <div class="qc" onclick="send('press win d')">show desktop</div>
     <div class="qc" onclick="send('close window')">close window</div>
@@ -92,6 +98,11 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
     <div class="qc" onclick="send('sleep')">sleep</div>
     <div class="qc" onclick="reloadContacts()">sync contacts</div>
   </div>
+</div>
+
+<div id="screenbox">
+  <div class="slabel">LIVE SCREEN <span style="color:#555;font-size:9px">(tap to refresh)</span></div>
+  <img id="screenimg" onclick="refreshScreen()" src="" alt="screen">
 </div>
 
 <div id="fb">
@@ -106,7 +117,7 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
 </div>
 
 <script>
-const SERVER = "https://doing-kim-trembl-frederick.trycloudflare.com";
+const SERVER = "https://ala-efficient-blowing-centuries.trycloudflare.com";
 const TOKEN  = "Moksha@2231";
 
 async function checkOnline(){
@@ -184,6 +195,17 @@ function listen(){
   r.start();
 }
 
+let screenOpen=false;
+function toggleScreen(){
+  screenOpen=!screenOpen;
+  document.getElementById("screenbox").style.display=screenOpen?"block":"none";
+  if(screenOpen)refreshScreen();
+}
+function refreshScreen(){
+  const img=document.getElementById("screenimg");
+  img.src=SERVER+"/screenshot?token="+TOKEN+"&t="+Date.now();
+}
+
 let filesOpen=false;
 function toggleFiles(){
   filesOpen=!filesOpen;
@@ -202,27 +224,31 @@ async function loadFiles(path){
       return;
     }
     let html="";
-    const par=path.includes("\\")?path.substring(0,path.lastIndexOf("\\"))||"C:\\":  "C:\\";
+    const lastSlash=path.lastIndexOf("\\");
+    const par=lastSlash>2?path.substring(0,lastSlash):"C:\\";
     if(path!=="C:\\Users\\moksh"&&path!=="C:\\"){
       html+=`<div class="fi" onclick="loadFiles('${par.replace(/\\/g,"\\\\")}')">`+
             `<span class="fn">⬆ Back</span></div>`;
     }
-    d.items.forEach(item=>{
-      const icon=item.type==="folder"?"📁":getIcon(item.name);
-      const size=item.type==="file"?fmtSize(item.size):"";
-      const ep=item.path.replace(/\\/g,"\\\\");
-      const action=item.type==="folder"
-        ?`loadFiles('${ep}')`
-        :`fileAction('${ep}','${item.name}')`;
-      html+=`<div class="fi" onclick="${action}">
-        <span class="fn">${icon} ${item.name}</span>
-        <span class="fs">${size}</span>
-      </div>`;
-    });
-    if(d.items.length===0)html="<div style='color:#555;font-size:12px;padding:8px'>Empty folder</div>";
+    if(d.items.length===0){
+      html+="<div style='color:#555;font-size:12px;padding:8px'>Empty folder</div>";
+    }else{
+      d.items.forEach(item=>{
+        const icon=item.type==="folder"?"📁":getIcon(item.name);
+        const size=item.type==="file"?fmtSize(item.size):"";
+        const ep=item.path.replace(/\\/g,"\\\\");
+        const action=item.type==="folder"
+          ?`loadFiles('${ep}')`
+          :`fileAction('${ep}','${item.name.replace(/'/g,"\\'")}')`;
+        html+=`<div class="fi" onclick="${action}">
+          <span class="fn">${icon} ${item.name}</span>
+          <span class="fs">${size}</span>
+        </div>`;
+      });
+    }
     document.getElementById("flist").innerHTML=html;
-  }catch{
-    document.getElementById("flist").innerHTML="<div style='color:#ef4444;font-size:12px;padding:8px'>Failed to load</div>";
+  }catch(e){
+    document.getElementById("flist").innerHTML="<div style='color:#ef4444;font-size:12px;padding:8px'>Failed to load: "+e.message+"</div>";
   }
 }
 
@@ -239,6 +265,8 @@ function fileAction(path,name){
         body:JSON.stringify({path,token:TOKEN})
       }).then(r=>r.json()).then(d=>{
         document.getElementById("res").textContent="✅ "+(d.result||d.error);
+      }).catch(()=>{
+        document.getElementById("res").textContent="❌ Failed to open file";
       });
     }
   }
@@ -246,11 +274,13 @@ function fileAction(path,name){
 
 function getIcon(name){
   const ext=name.split(".").pop().toLowerCase();
-  const m={pdf:"📄",jpg:"🖼",jpeg:"🖼",png:"🖼",gif:"🖼",bmp:"🖼",webp:"🖼",
+  const m={
+    pdf:"📄",jpg:"🖼",jpeg:"🖼",png:"🖼",gif:"🖼",bmp:"🖼",webp:"🖼",
     mp4:"🎬",mkv:"🎬",avi:"🎬",mov:"🎬",mp3:"🎵",wav:"🎵",
     doc:"📝",docx:"📝",xls:"📊",xlsx:"📊",ppt:"📊",pptx:"📊",
     zip:"🗜",rar:"🗜","7z":"🗜",exe:"⚙",msi:"⚙",
-    txt:"📃",csv:"📃",json:"📃",py:"📃",js:"📃",html:"📃"};
+    txt:"📃",csv:"📃",json:"📃",py:"📃",js:"📃",html:"📃"
+  };
   return m[ext]||"📄";
 }
 
