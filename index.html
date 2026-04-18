@@ -58,7 +58,7 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
 
 <div class="row2">
   <button class="lkbtn lock"   onclick="send('lock the screen')">🔒 Lock</button>
-  <button class="lkbtn unlock" onclick="send('unlock')">🔓 Unlock</button>
+  <button class="lkbtn unlock" onclick="send('unlock laptop')">🔓 Unlock</button>
 </div>
 <div class="row2">
   <button class="lkbtn files"  onclick="toggleFiles()">📁 Files</button>
@@ -101,7 +101,7 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
 </div>
 
 <div id="screenbox">
-  <div class="slabel">LIVE SCREEN <span style="color:#555;font-size:9px">(tap to refresh)</span></div>
+  <div class="slabel">LIVE SCREEN <span style="color:#555;font-size:9px">(tap image to refresh)</span></div>
   <img id="screenimg" onclick="refreshScreen()" src="" alt="screen">
 </div>
 
@@ -117,7 +117,7 @@ h1{font-size:20px;color:#c4b5fd;margin-bottom:2px}
 </div>
 
 <script>
-const SERVER = "https://sponsor-brush-leadership-trim.trycloudflare.com";
+const SERVER = "https://used-spots-aimed-consultants.trycloudflare.com";
 const TOKEN  = "Moksha@2231";
 
 async function checkOnline(){
@@ -202,8 +202,7 @@ function toggleScreen(){
   if(screenOpen)refreshScreen();
 }
 function refreshScreen(){
-  const img=document.getElementById("screenimg");
-  img.src=SERVER+"/screenshot?token="+TOKEN+"&t="+Date.now();
+  document.getElementById("screenimg").src=SERVER+"/screenshot?token="+TOKEN+"&t="+Date.now();
 }
 
 let filesOpen=false;
@@ -237,9 +236,10 @@ async function loadFiles(path){
         const icon=item.type==="folder"?"📁":getIcon(item.name);
         const size=item.type==="file"?fmtSize(item.size):"";
         const ep=item.path.replace(/\\/g,"\\\\");
+        const safeName=item.name.replace(/'/g,"\\'");
         const action=item.type==="folder"
           ?`loadFiles('${ep}')`
-          :`fileAction('${ep}','${item.name.replace(/'/g,"\\'")}')`;
+          :`fileAction('${ep}','${safeName}')`;
         html+=`<div class="fi" onclick="${action}">
           <span class="fn">${icon} ${item.name}</span>
           <span class="fs">${size}</span>
@@ -248,7 +248,7 @@ async function loadFiles(path){
     }
     document.getElementById("flist").innerHTML=html;
   }catch(e){
-    document.getElementById("flist").innerHTML="<div style='color:#ef4444;font-size:12px;padding:8px'>Failed to load: "+e.message+"</div>";
+    document.getElementById("flist").innerHTML="<div style='color:#ef4444;font-size:12px;padding:8px'>Failed: "+e.message+"</div>";
   }
 }
 
@@ -266,7 +266,7 @@ function fileAction(path,name){
       }).then(r=>r.json()).then(d=>{
         document.getElementById("res").textContent="✅ "+(d.result||d.error);
       }).catch(()=>{
-        document.getElementById("res").textContent="❌ Failed to open file";
+        document.getElementById("res").textContent="❌ Failed to open";
       });
     }
   }
@@ -274,13 +274,11 @@ function fileAction(path,name){
 
 function getIcon(name){
   const ext=name.split(".").pop().toLowerCase();
-  const m={
-    pdf:"📄",jpg:"🖼",jpeg:"🖼",png:"🖼",gif:"🖼",bmp:"🖼",webp:"🖼",
+  const m={pdf:"📄",jpg:"🖼",jpeg:"🖼",png:"🖼",gif:"🖼",bmp:"🖼",webp:"🖼",
     mp4:"🎬",mkv:"🎬",avi:"🎬",mov:"🎬",mp3:"🎵",wav:"🎵",
     doc:"📝",docx:"📝",xls:"📊",xlsx:"📊",ppt:"📊",pptx:"📊",
     zip:"🗜",rar:"🗜","7z":"🗜",exe:"⚙",msi:"⚙",
-    txt:"📃",csv:"📃",json:"📃",py:"📃",js:"📃",html:"📃"
-  };
+    txt:"📃",csv:"📃",json:"📃",py:"📃",js:"📃",html:"📃"};
   return m[ext]||"📄";
 }
 
